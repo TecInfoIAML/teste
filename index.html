@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo de Previsão de Evasão Escolar</title>
+    <style>
+        /* Reset de estilos padrão */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Estilos para o corpo da página */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+
+        /* Estilos para o cabeçalho */
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin: 20px 0;
+        }
+
+        /* Estilos para o formulário */
+        form {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Estilos para rótulos e campos de seleção */
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* Estilos para o botão de envio */
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+
+        /* Estilos para campos de seleção suspensa */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 6'%3E%3Cpath d='M6 0l-6 6h12z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 10px 6px;
+            padding-right: 30px;
+        }
+
+            /* Estilos para os campos de seleção suspensa quando focados */
+            select:focus {
+                border-color: #007bff;
+                outline: none;
+            }
+
+        /* Estilos para os campos de número */
+        input[type="number"] {
+            appearance: textfield;
+        }
+
+            /* Estilos para os campos de número quando focados */
+            input[type="number"]:focus {
+                border-color: #007bff;
+                outline: none;
+            }
+
+    </style>
+
+</head>
+<body>
+    <h1>Modelo de Previsão de Evasão Escolar</h1>
+    <form method="POST" action="/prever_evasao"></form>
+    <form method="POST" action="/">
+        <label for="estado_civil">Estado Civil:</label>
+        <select name="estado_civil" id="estado_civil">
+            <option value="1">Solteiro</option>
+            <option value="2">Casado</option>
+            <option value="3">Viúvo</option>
+            <option value="4">Divorciado</option>
+            <option value="5">União Estável</option>
+            <option value="6">Separado Judicialmente</option>
+        </select>
+       
+        <label for="ordem_inscricao">Ordem de Inscrição:</label>
+        <input type="number" id="ordem_inscricao" name="ordem_inscricao">
+       
+
+        <label for="horario_aula">Horário Aula:</label>
+        <select name="horario_aula" id="horario_aula">
+            <option value="0">Noturno</option>
+            <option value="1">Diurno</option>
+        </select>
+
+
+        <label for="qualificacao_previa">Qualificação Prévia:</label>
+        <select name="qualificacao_previa" id="qualificacao_previa">
+            <option value="1">Ensino Médio</option>
+            <option value="2">Ensino Superior - Bacharelado</option>
+            <option value="3">Ensino Superior - Licenciatura</option>
+            <option value="4">Ensino Superior - Mestrado</option>
+            <option value="5">Ensino Superior - Doutorado</option>
+            <option value="6">Cursando Ensino Superior</option>
+            <option value="9">3º Ano Ensino Médio - Incompleto</option>
+            <option value="10">2º Ano Ensino Médio - Não Concluído</option>
+            <option value="12">Outros - 2º Ano Ensino Médio</option>
+            <option value="14">1º Ano Ensino Médio</option>
+            <option value="19">Ensino Fundamental</option>
+            <option value="22">Curso técnico-profissional</option>
+            <option value="26">7º Ano Ensino Fundamental</option>
+            <option value="27">2º Ano Ensino Médio</option>
+            <option value="29">9º Ano Ensino Fundamental - Incompleto</option>
+            <option value="30">8º Ano Ensino Fundamental</option>
+            <option value="34">Desconhecido</option>
+            <option value="35">Não sabe ler nem escrever</option>
+            <option value="36">Sabe ler sem ter o 4º ano Ensino Fundamental</option>
+            <option value="37">Ensino básico 1º Ciclo (4º/5º ano) ou equiv.</option>
+            <option value="38">Ensino Básico 2.º Ciclo (6.º/7.º/8.º Ano) ou Equiv.</option>
+            <option value="39">Curso de especialização tecnológica</option>
+            <option value="40">Ensino superior - Pedagogia</option>
+            <option value="41">Curso superior especializado</option>
+            <option value="42">Tecnológo</option>
+            <option value="43">Ensino superior - Mestrado (Duração 3-4 semestres)</option>
+            <option value="44">Ensino superior - Doutoramento (Duração 6-8 semestres)</option>
+        </select>
+
+        <label for="qualificacao_anterior">Nota da qualificação anterior (entre 0 e 200)</label>
+        <input type="number" id="qualificacao_anterior" name="qualificacao_anterior">
+
+        <label for="nacionalidade">Qualificação Prévia:</label>
+        <select name="nacionalidade" id="nacionalidade">
+            <option value="1">Português</option>
+            <option value="2">Alemão</option>
+            <option value="6">Espanhol</option>
+            <option value="11">Italiano</option>
+            <option value="13">Holandês</option>
+            <option value="14">Inglês</option>
+            <option value="17">Lituano</option>
+            <option value="21">Angolano</option>
+            <option value="22">Cabo-Verdiano</option>
+            <option value="24">Guineense</option>
+            <option value="25">Moçambicano</option>
+            <option value="26">Santomense</option>
+            <option value="32">Turco</option>
+            <option value="41">Brasileiro</option>
+            <option value="62">Romeno</option>
+            <option value="100">República da Moldávia</option>
+            <option value="101">Mexicano</option>
+            <option value="103">Ucraniano</option>
+            <option value="105">Russo</option>
+            <option value="108">Cubano</option>
+            <option value="109">Colombiano</option>
+        </select>
+
+        <label for="escolaridade_materna">Escolaridade Materna:</label>
+        <select name="escolaridade_materna" id="escolaridade_materna">
+            <option value="1">Ensino Médio</option>
+            <option value="2">Ensino Superior - Bacharelado</option>
+            <option value="3">Ensino Superior - Licenciatura</option>
+            <option value="4">Ensino Superior - Mestrado</option>
+            <option value="5">Ensino Superior - Doutorado</option>
+            <option value="6">Cursando Ensino Superior</option>
+            <option value="9">3º Ano Ensino Médio - Incompleto</option>
+            <option value="10">2º Ano Ensino Médio - Não Concluído</option>
+            <option value="12">Outros - 2º Ano Ensino Médio</option>
+            <option value="14">1º Ano Ensino Médio</option>
+            <option value="19">Ensino Fundamental</option>
+            <option value="22">Curso técnico-profissional</option>
+            <option value="26">7º Ano Ensino Fundamental</option>
+            <option value="27">2º Ano Ensino Médio</option>
+            <option value="29">9º Ano Ensino Fundamental - Incompleto</option>
+            <option value="30">8º Ano Ensino Fundamental</option>
+            <option value="34">Desconhecido</option>
+            <option value="35">Não sabe ler nem escrever</option>
+            <option value="36">Sabe ler sem ter o 4º ano Ensino Fundamental</option>
+            <option value="37">Ensino básico 1º Ciclo (4º/5º ano) ou equiv.</option>
+            <option value="38">Ensino Básico 2.º Ciclo (6.º/7.º/8.º Ano) ou Equiv.</option>
+            <option value="39">Curso de especialização tecnológica</option>
+            <option value="40">Ensino superior - Pedagogia</option>
+            <option value="41">Curso superior especializado</option>
+            <option value="42">Tecnológo</option>
+            <option value="43">Ensino superior - Mestrado (Duração 3-4 semestres)</option>
+            <option value="44">Ensino superior - Doutoramento (Duração 6-8 semestres)</option>
+        </select>
+
+        <label for="escolaridade_paterna">Escolaridade Paterna:</label>
+        <select name="escolaridade_paterna" id="escolaridade_paterna">
+            <option value="1">Ensino Médio</option>
+            <option value="2">Ensino Superior - Bacharelado</option>
+            <option value="3">Ensino Superior - Licenciatura</option>
+            <option value="4">Ensino Superior - Mestrado</option>
+            <option value="5">Ensino Superior - Doutorado</option>
+            <option value="6">Cursando Ensino Superior</option>
+            <option value="9">3º Ano Ensino Médio - Incompleto</option>
+            <option value="10">2º Ano Ensino Médio - Não Concluído</option>
+            <option value="12">Outros - 2º Ano Ensino Médio</option>
+            <option value="14">1º Ano Ensino Médio</option>
+            <option value="19">Ensino Fundamental</option>
+            <option value="22">Curso técnico-profissional</option>
+            <option value="26">7º Ano Ensino Fundamental</option>
+            <option value="27">2º Ano Ensino Médio</option>
+            <option value="29">9º Ano Ensino Fundamental - Incompleto</option>
+            <option value="30">8º Ano Ensino Fundamental</option>
+            <option value="34">Desconhecido</option>
+            <option value="35">Não sabe ler nem escrever</option>
+            <option value="36">Sabe ler sem ter o 4º ano Ensino Fundamental</option>
+            <option value="37">Ensino básico 1º Ciclo (4º/5º ano) ou equiv.</option>
+            <option value="38">Ensino Básico 2.º Ciclo (6.º/7.º/8.º Ano) ou Equiv.</option>
+            <option value="39">Curso de especialização tecnológica</option>
+            <option value="40">Ensino superior - Pedagogia</option>
+            <option value="41">Curso superior especializado</option>
+            <option value="42">Tecnológo</option>
+            <option value="43">Ensino superior - Mestrado (Duração 3-4 semestres)</option>
+            <option value="44">Ensino superior - Doutoramento (Duração 6-8 semestres)</option>
+        </select>
+
+        <label for="profissao_materna">Profissão Materna:</label>
+        <select name="profissao_materna" id="profissao_materna">
+            <option value="0">Estudante</option>
+            <option value="1">Representantes do Poder Legislativo e dos Órgãos Executivos, Diretores, Diretores e Gerentes Executivos</option>
+            <option value="2">Especialistas em Atividades Intelectuais e Científicas</option>
+            <option value="3">Técnicos e Profissões de Nível Intermediário</option>
+            <option value="4">Pessoal Administrativo</option>
+            <option value="5">Serviços Pessoais, Trabalhadores de Segurança e Proteção e Vendedores</option>
+            <option value="6">Agricultores e Trabalhadores Qualificados na Agricultura, Pesca e Silvicultura</option>
+            <option value="7">Trabalhadores Qualificados na Indústria, Construção e Artesãos</option>
+            <option value="8">Operadores de Instalações e Máquinas e Trabalhadores de Montagem</option>
+            <option value="9">Trabalhadores Não Qualificados</option>
+            <option value="10">Profissões das Forças Armadas</option>
+            <option value="90">Outra Situação</option>
+            <option value="99">(em branco)</option>
+            <option value="122">Profissionais de saúde</option>
+            <option value="123">Professores</option>
+            <option value="125">Especialistas em tecnologias de informação e comunicação (TIC)</option>
+            <option value="131">Técnicos e profissões de ciências e engenharia de nível intermédio</option>
+            <option value="132">Técnicos e profissionais, de nível intermédio de saúde</option>
+            <option value="134">Técnicos de nível intermédio de áreas jurídicas, sociais, desportivas, serviços culturais e similares</option>
+            <option value="141">Trabalhadores de escritório, secretárias em geral e operadores de processamento de dados</option>
+            <option value="143">Operadores de serviços de dados, de contabilidade, de estatística, financeiros e de registo</option>
+            <option value="144">Outro pessoal de apoio administrativo</option>
+            <option value="151">Trabalhadores de serviços pessoais</option>
+            <option value="152">Vendedores</option>
+            <option value="153">Trabalhadores de cuidados pessoais e similares</option>
+            <option value="171">Trabalhadores qualificados da construção civil e similares, exceto eletricistas</option>
+            <option value="173">Trabalhadores qualificados em impressão, fabricação de instrumentos de precisão, joalheiros, artesãos e similares</option>
+            <option value="175">Trabalhadores no processamento de alimentos, marcenaria, vestuário e outras indústrias e artesanato</option>
+            <option value="191">Trabalhadores de limpeza</option>
+            <option value="192">Trabalhadores não qualificados na agricultura, produção animal, pescas e silvicultura</option>
+            <option value="193">Trabalhadores não qualificados na indústria extractiva, construção, indústria transformadora e transportes</option>
+            <option value="194">Auxiliares de preparação de refeições</option>
+        </select>
+
+    <label for="profissao_paterna">Profissão Paterna:</label>
+    <select name="profissao_paterna" id="profissao_paterna">
+        <option value="0">Estudante</option>
+        <option value="1">Representantes do Poder Legislativo e dos Órgãos Executivos, Diretores, Diretores e Gerentes Executivos</option>
+        <option value="2">Especialistas em Atividades Intelectuais e Científicas</option>
+        <option value="3">Técnicos e Profissões de Nível Intermediário</option>
+        <option value="4">Pessoal Administrativo</option>
+        <option value="5">Serviços Pessoais, Trabalhadores de Segurança e Proteção e Vendedores</option>
+        <option value="6">Agricultores e Trabalhadores Qualificados na Agricultura, Pesca e Silvicultura</option>
+        <option value="7">Trabalhadores Qualificados na Indústria, Construção e Artesãos</option>
+        <option value="8">Operadores de Instalações e Máquinas e Trabalhadores de Montagem</option>
+        <option value="9">Trabalhadores Não Qualificados</option>
+        <option value="10">Profissões das Forças Armadas</option>
+        <option value="90">Outras Situações</option>
+        <option value="99">(em branco)</option>
+        <option value="101">Oficiais das Forças Armadas</option>
+        <option value="102">Sargentos das Forças Armadas</option>
+        <option value="103">Outros militares das Forças Armadas</option>
+        <option value="112">Diretores de serviços administrativos e comerciais</option>
+        <option value="114">Diretores de hotelaria, restauração, comércio e outros serviços</option>
+        <option value="121">Especialistas em ciências físicas, matemáticas, engenharias e técnicas afins</option>
+        <option value="122">Profissionais de saúde</option>
+        <option value="123">Professores</option>
+        <option value="124">Especialistas em finanças, contabilidade, organização administrativa, relações públicas e comerciais</option>
+        <option value="131">Técnicos e profissões de nível intermédio de ciências e engenharia</option>
+        <option value="132">Técnicos e profissionais liberais, de nível intermédio de saúde</option>
+        <option value="134">Técnicos de nível intermédio de áreas jurídicas, sociais serviços desportivos, culturais e similares</option>
+        <option value="135">Técnicos de tecnologias de informação e comunicação</option>
+        <option value="141">Trabalhadores de escritório, secretárias em geral e operadores de processamento de dados</option>
+        <option value="143">Operadores de serviços de dados, de contabilidade, de estatística, financeiros e de registo</option>
+        <option value="144">Outro pessoal de apoio administrativo</option>
+        <option value="151">Pessoal trabalhadores de serviços</option>
+        <option value="152">Sendedores</option>
+        <option value="153">Trabalhadores de cuidados pessoais e similares</option>
+        <option value="154">Pessoal de serviços de proteção e segurança</option>
+        <option value="161">Agricultores orientados para o mercado e trabalhadores qualificados da produção agrícola e animal</option>
+        <option value="163">Agricultores, criadores de gado, pescadores, caçadores e coletores, subsistência</option>
+        <option value="171">Qualificados trabalhadores da construção civil e similares, exceto eletricistas</option>
+        <option value="172">Trabalhadores qualificados em metalurgia, metalurgia e similares</option>
+        <option value="174">Trabalhadores qualificados em eletricidade e eletrônica</option>
+        <option value="175">Trabalhadores em processamento de alimentos, marcenaria, vestuário e outras indústrias e artesanato</option>
+        <option value="181">Operadores de instalações fixas e máquinas</option>
+        <option value="182">Trabalhadores da montagem</option>
+        <option value="183">Condutores de veículos e operadores de equipamentos móveis</option>
+        <option value="192">Trabalhadores não qualificados na agricultura, produção animal, pescas e silvicultura</option>
+        <option value="193">Trabalhadores não qualificados na indústria extractiva, construção, indústria transformadora e transportes</option>
+        <option value="194">Auxiliares de preparação de refeições</option>
+        <option value="195">Vendedores ambulantes (exceto alimentos) e prestadores de serviços de rua</option>
+    </select>
+
+
+    <label for="nota_admissao">Nota de admissão (entre 0 e 200)</label>
+        <input type="number" id="nota_admissao" name="nota_admissao">
+
+        
+        <label for="necessidades_educacionais">Necessidades Educacionais Especiais:</label>
+        <select name="necessidades_educacionais" id="necessidades_educacionais">
+            <option value="0">Não</option>
+            <option value="1">Sim</option>
+        </select>
+
+        <label for="devedor">Possui dívidas:</label>
+        <select name="devedor" id="devedor">
+            <option value="0">Não</option>
+            <option value="1">Sim</option>
+        </select>
+
+        <label for="mensalidade_em_dia">Mensalidade em Dia:</label>
+        <select name="mensalidade_em_dia" id="mensalidade_em_dia">
+            <option value="0">Não</option>
+            <option value="1">Sim</option>
+        </select>
+
+        <label for="sexo">Sexo:</label>
+        <select name="sexo" id="sexo">
+            <option value="0">Feminino</option>
+            <option value="1">Masculino</option>
+        </select>
+
+        <label for="bolsista">Bolsista:</label>
+        <select name="bolsista" id="bolsista">
+            <option value="0">Não</option>
+            <option value="1">Sim</option>
+        </select>
+
+        <label for="idade_na_inscricao">Idade na Inscrição:</label>
+        <input type="number" name="idade_na_inscricao" id="idade_na_inscricao" min="0">
+
+        <label for="internaconal">Internacional:</label>
+        <select name="internacional" id="internacional">
+            <option value="0">Não</option>
+            <option value="1">Sim</option>
+        </select>
+
+        <label for="disciplinas_inscrita1">Quantidade de disciplinas matriculado no 1º semestre:</label>
+        <input type="number" name="disciplinas_inscrita1" id="disciplinas_inscrita1" min="0">
+
+        <label for="disciplinas_aprovadas">Disciplinas Aprovadas no  1º Semestre:</label>
+        <input type="number" name="disciplinas_aprovadas" id="disciplinas_aprovadas" min="0">
+
+        <label for="disciplinas_inscrita2">Quantidade de disciplinas matriculado no 2º semestre:</label>
+        <input type="number" name="disciplinas_inscrita2" id="disciplinas_inscrita2" min="0">
+
+        <label for="disciplinas_aprovadas2">Disciplinas Aprovadas no  2º Semestre:</label>
+        <input type="number" name="disciplinas_aprovadas2" id="disciplinas_aprovadas2" min="0">
+
+        <button type="submit">Enviar</button>
+    </form>
+</body>
+</html>
