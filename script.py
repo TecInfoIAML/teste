@@ -35,7 +35,7 @@ def prever_evasao():
 
     # Enviar a solicitação à API de pontuação
     body = str.encode(json.dumps(data))
-    api_key = ''  # Substitua pela sua chave de API, se necessário
+    api_key = '65DEgn8acd3mWVh3cKSEMaHVfKr2g004'  # Substitua pela sua chave de API, se necessário
     headers = {'Content-Type': 'application/json', 'Authorization': ('Bearer ' + api_key)}
 
     req = urllib.request.Request(api_url, body, headers)
